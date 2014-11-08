@@ -39,6 +39,7 @@ public class SafeWalkServer {
     public int getLocalPort() {
         return this.port;
     }
+    
     /**
      * Start a loop to accept incoming connections.
      */
@@ -61,5 +62,38 @@ public class SafeWalkServer {
             System.exit(0);
         }
         else if (line.equals(":
+    }
+    public static void pair(String line) {
+        for (int i = 0; i < a.size(); i++) {
+            
+        }
+    }
+}
+class Walker() {
+    private String name = "";
+    private String from = "";
+    private String to = "";
+    private int priority = 0;
+    private int port = 0;
+    public Walker(String line, int port) {
+        this.port = port;
+        while (line.indexOf(",") != -1) {
+            int counter = 0;
+            switch(counter) {
+                case 0:
+                    this.name = line.substring(0, line.indexOf(","));
+                    break;
+                case 1:
+                    this.from = line.substring(0, line.indexOf(","));
+                    break;
+                case 2:
+                    this.to = line.substring(0, line.indexOf(","));
+                    break;
+                default:
+                    break;
+            }
+            line = line.substring(line.indexOf(","));
+            counter++;
+        }
     }
 }
