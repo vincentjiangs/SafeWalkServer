@@ -61,7 +61,7 @@ public class SafeWalkServer {
             serverSocket.close();
             System.exit(0);
         }
-        else if (line.equals(":
+        else if (line.equals(":"))
     }
     public static void pair(String line) {
         for (int i = 0; i < a.size(); i++) {
