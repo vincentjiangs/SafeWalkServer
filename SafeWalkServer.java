@@ -92,7 +92,7 @@ class Walker {
                 default:
                     break;
             }
-            line = line.substring(line.indexOf(","));
+            line = line.substring(line.indexOf(",") + 1);
             counter++;
         }
     }
