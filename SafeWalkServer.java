@@ -69,7 +69,7 @@ public class SafeWalkServer {
         }
     }
 }
-class Walker() {
+class Walker {
     private String name = "";
     private String from = "";
     private String to = "";
