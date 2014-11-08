@@ -5,7 +5,7 @@ import java.net.*;
 public class SafeWalkServer {
     private int port;
     private ServerSocket serverSocket = null;
-    static ArrayList<String> a = new ArrayList(0);
+    static ArrayList<Walker> a = new ArrayList(0);
     static String[] locations = {"CL50", "EE", "LWSN", "PMU", "PUSH"};
 
     /*
@@ -61,7 +61,12 @@ public class SafeWalkServer {
             serverSocket.close();
             System.exit(0);
         }
-        else if (line.equals(":"))
+        else if (line.equals(":RESET")) {
+            a = new ArrayList(0);
+        }
+        else if (line.equals(":LIST_PENDING_REQUESTS") {
+            
+        }
     }
     public static void pair(String line) {
         for (int i = 0; i < a.size(); i++) {
@@ -90,10 +95,25 @@ class Walker {
                     this.to = line.substring(0, line.indexOf(","));
                     break;
                 default:
-                    break;
+                    return;
             }
             line = line.substring(line.indexOf(",") + 1);
             counter++;
         }
+    }
+    public String getName() {
+        return this.name;   
+    }
+    public String getFrom() {
+        return this.from;
+    }
+    public String getTo() {
+        return this.to;
+    }
+    public int getPriority() {
+        return this.priority();
+    }
+    public int getPort() {
+        return this.port;
     }
 }
