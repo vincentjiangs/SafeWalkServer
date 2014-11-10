@@ -55,6 +55,10 @@ private String[] locations = {"CL50", "EE", "LWSN", "PMU", "PUSH"};
 	void respondToLine(String line, Socket client) {
         try {
 		    if (line.equals(":SHUTDOWN")) {
+                for (int i = 0; i < a.size(); i++) {
+                    response("ERROR: connection reset\n", a.get(i).getSocket());
+                }
+                response("ERROR: connection reset\n", client);
 			    serverSocket.close();
 			    System.exit(0);
 		    }
