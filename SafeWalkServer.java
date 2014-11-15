@@ -1,3 +1,17 @@
+/**
+ * CS 180 - Project 5 - SafeWalkServerPhase1
+ * 
+ * Implements and expands a server for the Purdue Safe Walk Program. 
+ * 
+ * @author Vincent Jiang <jiangv@purdue.edu>
+ * @author Sameer Manchanda <smanchan@purdue.edu>
+ * 
+ * @lab Vincent Jiang: Section 811
+ * @lab Sameer Manchanda: Section 817
+ *
+ * @date November 11, 2014
+ */
+
 import java.util.*;
 import java.io.*;
 import java.net.*;
@@ -73,9 +87,9 @@ public class SafeWalkServer implements Runnable {
             }
             else if (line.equals(":RESET")) {
                 for (int i = 0; i < a.size(); i++) {
-                    response("ERROR: connection reset\n", a.get(i).getSocket());
+                    response("ERROR: connection reset", a.get(i).getSocket());
                 }
-                response("RESPONSE: success\n", client);
+                response("RESPONSE: success", client);
                 for (int j = 0; j < a.size(); j++) {
                     a.get(j).getSocket().close();
                 }
@@ -84,15 +98,17 @@ public class SafeWalkServer implements Runnable {
             }
             else if (line.equals(":LIST_PENDING_REQUESTS")) {
                 String s = "";
-                for (int i = 0; i < a.size(); i++) {
-                    s = s + "[" + a.get(i).printWalker() + "]\n";
+                for (int i = 0; i < a.size() - 1; i++) {
+                    s += "[" + a.get(i).printWalker() + "], ";
                 }
+                s += "[" + a.get(a.size() - 1).printWalker() + "]"; 
+                s = "[" + s + "]";
                 response(s, client);
                 client.close();
             }
             else {
                 if (line.charAt(0) == ':') {
-                    response("ERROR: Invalid command\n", client);
+                    response("ERROR: invalid request\n", client);
                     client.setReuseAddress(true);
                     client.close();
                     return;
@@ -101,7 +117,7 @@ public class SafeWalkServer implements Runnable {
                     boolean validLocation = false;
                     Walker b = new Walker (line, client);
                     if (b.getName().equals("")) {
-                        response("ERROR: Invalid input\n", client);
+                        response("ERROR: invalid request\n", client);
                         client.setReuseAddress(true);
                         client.close();
                         return;
@@ -112,7 +128,7 @@ public class SafeWalkServer implements Runnable {
                         }
                     }
                     if (validLocation == false) {
-                        response("ERROR: Invalid input\n", client);
+                        response("ERROR: invalid request\n", client);
                         client.setReuseAddress(true);
                         client.close();
                         return;
@@ -127,13 +143,19 @@ public class SafeWalkServer implements Runnable {
                         validLocation = true;
                     }
                     if (validLocation == false) {
-                        response("ERROR: Invalid input\n", client);
+                        response("ERROR: invalid request\n", client);
                         client.setReuseAddress(true);
                         client.close();
                         return;
                     }
                     if (b.getPriority() == -1) {
-                        response("ERROR: Invalid input\n", client);
+                        response("ERROR: invalid request\n", client);
+                        client.setReuseAddress(true);
+                        client.close();
+                        return;
+                    }
+                    if (b.getFrom().equals(b.getTo())) {
+                        response("ERROR: invalid request\n", client);
                         client.setReuseAddress(true);
                         client.close();
                         return;
@@ -157,8 +179,8 @@ public class SafeWalkServer implements Runnable {
             for (int i = 0; i < a.size() - 1; i++) {
                 if (a.get(i).getFrom().equals(a.get(a.size() - 1).getFrom())) {
                     if (a.get(i).isVolunteer() != volunteer) {
-                        response("RESPONSE: " + a.get(i).printWalker() + "\n", a.get(a.size() - 1).getSocket());
-                        response("RESPONSE: " + a.get(a.size() - 1).printWalker() + "\n", a.get(i).getSocket());
+                        response("RESPONSE: [" + a.get(i).printWalker() + "]\n", a.get(a.size() - 1).getSocket());
+                        response("RESPONSE: [" + a.get(a.size() - 1).printWalker() + "]\n", a.get(i).getSocket());
                         a.get(i).getSocket().setReuseAddress(true);
                         a.get(a.size() - 1).getSocket().setReuseAddress(true);
                         a.get(i).getSocket().close();
@@ -166,7 +188,22 @@ public class SafeWalkServer implements Runnable {
                         a.remove(i);
                         a.remove(a.size() - 1);
                         return;
-                    }   
+                    }
+                    if (a.get(i).getTo().equals(a.get(a.size() - 1).getTo())) {
+                        if (a.get(i).getTo().equals("*") || a.get(a.size() - 1).getTo().equals("*")) {
+                        }
+                        else {
+                        response("RESPONSE: [" + a.get(i).printWalker() + "]\n", a.get(a.size() - 1).getSocket());
+                        response("RESPONSE: [" + a.get(a.size() - 1).printWalker() + "]\n", a.get(i).getSocket());
+                        a.get(i).getSocket().setReuseAddress(true);
+                        a.get(a.size() - 1).getSocket().setReuseAddress(true);
+                        a.get(i).getSocket().close();
+                        a.get(a.size() - 1).getSocket().close();
+                        a.remove(i);
+                        a.remove(a.size() - 1);
+                        return;
+                        }
+                    }
                 }
             }
         }
@@ -246,6 +283,6 @@ class Walker {
             return false;
     }
     public String printWalker() {
-        return this.name + "," + this.from + "," + this.to + "," + this.priority;
+        return this.name + ", " + this.from + ", " + this.to + ", " + this.priority;
     }
 }
